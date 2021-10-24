@@ -109,6 +109,9 @@ class CartService
             $cart = Cart::where('token', $data['token'])->first();
             if ($this->reAddInventories($cart)->getStatusCode() == 200) {
                 $cart->details()->delete();
+                $cart->total_price = 0;
+                $cart->discounted_price = 0;
+                $cart();
             }
 
             return response()->json('Success', 200);
