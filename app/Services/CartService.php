@@ -121,6 +121,7 @@ class CartService
     /**
      * Adds inventories back after clearing the cart
      * @param Cart $cart
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|JsonResponse|\Illuminate\Http\Response
      */
     public function reAddInventories(Cart $cart)
     {
