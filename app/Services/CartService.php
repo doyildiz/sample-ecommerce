@@ -111,7 +111,7 @@ class CartService
                 $cart->details()->delete();
                 $cart->total_price = 0;
                 $cart->discounted_price = 0;
-                $cart();
+                $cart->save();
             }
 
             return response()->json('Success', 200);
