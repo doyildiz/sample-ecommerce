@@ -44,7 +44,7 @@
                                     @guest
                                         <a href="{{route('login')}}">Log in to view your pricing</a>
                                     @else
-                                        ${{number_format($detail->product->price,2)}}
+                                        ${{number_format(($detail->product->price * $detail->quantity),2)}}
                                     @endif
                                 </td>
                                 <td class="text-center"></a>
