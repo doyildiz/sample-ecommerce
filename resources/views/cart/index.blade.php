@@ -17,7 +17,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                @if($cart)
+                @if(isset($cart))
                     @if(!empty($cart->details))
                         @foreach($cart->details as $detail)
                             <tr>
@@ -57,7 +57,13 @@
                                 Your cart is empty
                             </td>
                         </tr>
-                        @endif
+                    @endif
+                @else
+                    <tr>
+                        <td colspan="4" style="text-align: center;">
+                            Your cart is empty
+                        </td>
+                    </tr>
                 @endif
 
                 </tbody>
@@ -68,7 +74,7 @@
                     @guest
                         <a href="{{route('login')}}">Log in to view your pricing</a>
                     @else
-                        ${{number_format($cart->total_price,2)}}
+                        @if(isset($cart)) ${{number_format($cart->total_price,2)}} @else $0.00 @endif
                     @endif
                 </span></div>
         </div>

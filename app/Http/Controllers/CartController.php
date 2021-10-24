@@ -33,15 +33,18 @@ class CartController extends Controller
      */
     public function index()
     {
-        $token = $_COOKIE['cartID'];
+        if (isset($_COOKIE['cartID'])){
+            $token = $_COOKIE['cartID'];
 
-        if ($token !== null) {
-            $cart = $this->cartService->getCart($token);
+            if ($token !== null) {
+                $cart = $this->cartService->getCart($token);
 
-            if ($cart->getStatusCode() != 200) return view('cart.index', ['products' => []]);
+                if ($cart->getStatusCode() != 200) return view('cart.index', ['products' => []]);
 
-            return view('cart.index', ['cart' => $cart->getData()]);
+                return view('cart.index', ['cart' => $cart->getData()]);
+            }
         }
+        return redirect('/');
     }
 
     /**
