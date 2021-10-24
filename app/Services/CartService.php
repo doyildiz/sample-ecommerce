@@ -50,7 +50,7 @@ class CartService
                 ->where('product_id', $product['product_id'])->get();
             $pro = Product::find($product['product_id']);
 
-            if ($details->sum('quantity') + (int)$product['quantity'] > $pro->stock)
+            if ((int)$product['quantity'] > $pro->stock)
                 return response()->json(false, 200);
 
             if ($details->count() == 0) return response()->json($product['quantity'], 200);
@@ -107,9 +107,31 @@ class CartService
     {
         try {
             $cart = Cart::where('token', $data['token'])->first();
-            $cart->details()->delete();
+            if ($this->reAddInventories($cart)->getStatusCode() == 200) {
+                $cart->details()->delete();
+            }
 
             return response()->json('Success', 200);
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage());
+            return response()->json($exception->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Adds inventories back after clearing the cart
+     * @param Cart $cart
+     */
+    public function reAddInventories(Cart $cart)
+    {
+        try {
+            if ($cart->details->count() > 0) {
+                foreach ($cart->details as $detail) {
+                    Product::find($detail->product_id)->increment('stock', (int)$detail->quantity);
+                }
+            }
+
+            return response(true, 200);
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
             return response()->json($exception->getMessage(), 500);
